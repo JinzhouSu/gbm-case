@@ -110,10 +110,6 @@ int find_drm_device_res(struct drm_resource *res)
 
 		if (!(device->available_nodes & (1 << DRM_NODE_PRIMARY)))
 			continue;
-		/* OK, it's a primary device. If we can get the
-		 * drmModeResources, it means it's also a
-		 * KMS-capable device.
-		 */
 		fd = open(device->nodes[DRM_NODE_PRIMARY], O_RDWR);
 		if (fd < 0)
 			continue;

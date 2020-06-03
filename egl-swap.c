@@ -84,13 +84,14 @@ static int start_to_play(struct egl_resource *egl_res, struct gbm_resource *gbm_
 		goto out_play;
 	}
 
-	for (i = 0; i < 600; i++){
+	for (i = 0; i < 300; i++){
 		struct gbm_bo *next_bo;
 		int waiting_for_flip = 1;
 
-		glClearColor(i/600.0f, 0.0, 1.0f-i/600.0f, 1.0);
+		glClearColor(i/300.0f, 0.0, 1.0f-i/300.0f, 1.0);
 		glClear(GL_COLOR_BUFFER_BIT);
 		eglSwapBuffers(egl_res->display, egl_res->surface);
+
 	    next_bo = gbm_surface_lock_front_buffer(gbm_res->surface);
 	    gbm_bo_handle = gbm_bo_get_handle(next_bo).u32;
 	    bo_stride = gbm_bo_get_stride(next_bo);
@@ -107,13 +108,6 @@ static int start_to_play(struct egl_resource *egl_res, struct gbm_resource *gbm_
             printf("failed to queue page flip\n");
 			goto out_play;
         }
-
-		err = drmModeSetCrtc(drm_res->device_fd, drm_res->crtc_id, frame_id, 0, 0,
-				&drm_res->connector_id, 1, &drm_res->mode);
-		if (err){
-			printf("failed to set crtc\n");
-			goto out_play;
-		}
 
         while (waiting_for_flip) {
             FD_ZERO(&fds);
