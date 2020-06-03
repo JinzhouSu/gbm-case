@@ -35,42 +35,57 @@
 #include <GLES2/gl2.h>
 #include <EGL/egl.h>
 /** Specified options strings for getopt */ 
-static const char options[]   = "hbek";
+static const char options[]   = "hek";
 int kms_swap();
 int egl_swap();
+
+static void help(){
+	printf("usage : [-hek]\n"
+			"\n"
+			"options :\n"
+			"    -k  GBM basic create bo test, use drmModeSetCrtc to display the surface.\n"
+			"    -e  GBM EGL related test, use drmModePageFlip to display the surface.\n "
+			"\n"
+	);
+}
+
+static void kms_test(){
+	int err = 0;
+	printf("kms swap function\n");
+	err = kms_swap();
+	if (err)
+		printf("kms swap failed!\n");
+	else
+		printf("kms swap succeed\n");
+}
+
+static void egl_test(){
+	int err = 0;
+	printf("egl swap function\n");
+	err = egl_swap();
+	if (err)
+		printf("egl swap failed!\n");
+	else
+		printf("egl swap succeed\n");
+}
 
 int main(int argc, char *argv[])
 {
     int c;          /* Character received from getopt */
-	int err = 0;
-
+	if (argc == 1)
+		help();
 	while ((c = getopt(argc, argv, options)) != -1) {
 		switch (c) {
 		case 'h' :
-			printf("help function!\n");
-			break;
-		case 'b' :
-			printf("basic test function\n");
-		//	gbm_basic();
+			help();	
 			break;
 		case 'k' :
-			printf("kms swap funciont\n");
-			err = kms_swap();
-			if (err)
-				printf("kms swap failed!\n");
-			else
-				printf("kms swap succeed\n");
+			kms_test();
 			break;
 		case 'e' :
-		    printf("egl function\n");
-			err = egl_swap();
-			if (err)
-				printf("egl swap failed!\n");
-			else
-				printf("egl swap succeed\n");
+			egl_test();
 			break;
 		default :
-		    printf("all function\n");	
 			break;
 		}
 	}
