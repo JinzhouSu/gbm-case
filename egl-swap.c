@@ -35,11 +35,11 @@
 static void page_flip_handler(int fd, unsigned int frame,
           unsigned int sec, unsigned int usec, void *data)
 {
-    /* suppress 'unused parameter' warnings */
-    (void)fd, (void)frame, (void)sec, (void)usec;
+	/* suppress 'unused parameter' warnings */
+	(void)fd, (void)frame, (void)sec, (void)usec;
 
-    int *waiting_for_flip = data;
-    *waiting_for_flip = 0;
+	int *waiting_for_flip = data;
+	*waiting_for_flip = 0;
 }
 
 static int start_to_play(struct egl_resource *egl_res, struct gbm_resource *gbm_res,
@@ -49,9 +49,9 @@ static int start_to_play(struct egl_resource *egl_res, struct gbm_resource *gbm_
 	unsigned int gbm_bo_handle = 0;
 	unsigned int bo_stride = 0;
 	fd_set fds;
-    int err = 0;
-    int ret = 0;
-    int i = 0;
+	int err = 0;
+	int ret = 0;
+	int i = 0;
 
 	drmEventContext evctx = {
 		.version = 2,
@@ -65,10 +65,10 @@ static int start_to_play(struct egl_resource *egl_res, struct gbm_resource *gbm_
 		err = -1;
 		return err;
 	}
-    gbm_bo_handle = gbm_bo_get_handle(bo).u32;
+	gbm_bo_handle = gbm_bo_get_handle(bo).u32;
 	bo_stride = gbm_bo_get_stride(bo);
 
-    err = drmModeAddFB(drm_res->device_fd, drm_res->mode.hdisplay, drm_res->mode.vdisplay, 
+	err = drmModeAddFB(drm_res->device_fd, drm_res->mode.hdisplay, drm_res->mode.vdisplay, 
 			24, 32, bo_stride, gbm_bo_handle, &frame_id);
 	if (err < 0){
 		printf("Add FB failed!\n");
@@ -92,9 +92,9 @@ static int start_to_play(struct egl_resource *egl_res, struct gbm_resource *gbm_
 		glClear(GL_COLOR_BUFFER_BIT);
 		eglSwapBuffers(egl_res->display, egl_res->surface);
 
-	    next_bo = gbm_surface_lock_front_buffer(gbm_res->surface);
-	    gbm_bo_handle = gbm_bo_get_handle(next_bo).u32;
-	    bo_stride = gbm_bo_get_stride(next_bo);
+		next_bo = gbm_surface_lock_front_buffer(gbm_res->surface);
+		gbm_bo_handle = gbm_bo_get_handle(next_bo).u32;
+		bo_stride = gbm_bo_get_stride(next_bo);
 		err = drmModeAddFB(drm_res->device_fd, drm_res->mode.hdisplay, drm_res->mode.vdisplay, 
 				24, 32, bo_stride, gbm_bo_handle, &frame_id);
 		if (err < 0){
@@ -104,29 +104,29 @@ static int start_to_play(struct egl_resource *egl_res, struct gbm_resource *gbm_
 
 		err = drmModePageFlip(drm_res->device_fd, drm_res->crtc_id, frame_id,
                 DRM_MODE_PAGE_FLIP_EVENT, &waiting_for_flip);
-        if (err) {
-            printf("failed to queue page flip\n");
+		if (err) {
+			printf("failed to queue page flip\n");
 			goto out_play;
-        }
+		}
 
-        while (waiting_for_flip) {
-            FD_ZERO(&fds);
-            FD_SET(0, &fds);
-            FD_SET(drm_res->device_fd, &fds);
+		while (waiting_for_flip) {
+			FD_ZERO(&fds);
+			FD_SET(0, &fds);
+			FD_SET(drm_res->device_fd, &fds);
 
-            ret = select(drm_res->device_fd + 1, &fds, NULL, NULL, NULL);
-            if (ret < 0) {
-                printf("select err: %d\n", err);
-                return ret;
-            } else if (ret == 0) {
-                printf("select timeout!\n");
-                return -1;
-            } else if (FD_ISSET(0, &fds)) {
-                printf("user interrupted!\n");
-                return 0;
-            }
-            drmHandleEvent(drm_res->device_fd, &evctx);
-        }
+			ret = select(drm_res->device_fd + 1, &fds, NULL, NULL, NULL);
+			if (ret < 0) {
+				printf("select err: %d\n", err);
+				return ret;
+			} else if (ret == 0) {
+				printf("select timeout!\n");
+				return -1;
+			} else if (FD_ISSET(0, &fds)) {
+				printf("user interrupted!\n");
+				return 0;
+			}
+			drmHandleEvent(drm_res->device_fd, &evctx);
+		}
 		
 		gbm_surface_release_buffer(gbm_res->surface, bo);
 		bo = next_bo;
@@ -205,7 +205,7 @@ int egl_swap()
 	}
 
 	gbm_res->surface = gbm_surface_create(gbm_res->device, drm_res->mode.hdisplay, drm_res->mode.vdisplay, 
-									GBM_BO_FORMAT_XRGB8888, GBM_BO_USE_SCANOUT|GBM_BO_USE_RENDERING);
+							GBM_BO_FORMAT_XRGB8888, GBM_BO_USE_SCANOUT|GBM_BO_USE_RENDERING);
 	if (!gbm_res->surface){
 		printf("failed to create gbm surface!\n");
 		err = -1;

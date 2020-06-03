@@ -48,7 +48,7 @@ int kms_swap()
 	const uint32_t colors[2] = {0xff0000ff, 0xffff0000};
 
 	res = calloc(1, sizeof(*res));
-    if (!res){
+	if (!res){
 		return -1;
 	}
 
@@ -93,7 +93,7 @@ int kms_swap()
 	while (1) {
 		void *data = NULL;
 		ptr = gbm_bo_map(bo, 0, 0, res->mode.hdisplay, res->mode.vdisplay,
-			   	GBM_BO_TRANSFER_READ_WRITE, &bo_stride, &data);
+				GBM_BO_TRANSFER_READ_WRITE, &bo_stride, &data);
 		if (ptr == NULL){
 			printf("failed to map GBM buffer object!\n");
 			err = -1;
@@ -127,7 +127,7 @@ err_handle2:
 
 	if(res->crtc){
 		drmModeSetCrtc(res->device_fd, res->crtc->crtc_id, res->crtc->buffer_id, 
-				res->crtc->x, res->crtc->y, &res->connector_id, 1, &res->mode);
+			res->crtc->x, res->crtc->y, &res->connector_id, 1, &res->mode);
 		drmModeFreeCrtc(res->crtc);
 	}
 
