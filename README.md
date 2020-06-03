@@ -15,6 +15,6 @@ To set up meson:
 
 	meson builddir/
 
-The use ninja to build:
+Use ninja to build:
 
 	ninja -C builddir/
